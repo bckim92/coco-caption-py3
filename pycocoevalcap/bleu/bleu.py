@@ -20,18 +20,15 @@ class Bleu:
         self._hypo_for_image = {}
         self.ref_for_image = {}
 
-    def compute_score(self, hypo_for_image, ref_for_image):
+    def compute_score(self, gts, res):
 
-        images = hypo_for_image.keys()
-        images.sort()
-        tmp_images = ref_for_image.keys()
-        tmp_images.sort()
-        assert(images == tmp_images)
+        assert(gts.keys() == res.keys())
+        imgIds = gts.keys()
 
         bleu_scorer = BleuScorer(n=self._n)
-        for i in images:
-            hypo = hypo_for_image[i]
-            ref = ref_for_image[i]
+        for id in imgIds:
+            hypo = res[id]
+            ref = gts[id]
 
             # Sanity check.
             assert(type(hypo) is list)
@@ -41,10 +38,10 @@ class Bleu:
 
             bleu_scorer += (hypo[0], ref)
 
-        bleu, bleu_list = bleu_scorer.compute_score(option='shortest')
+        score, scores = bleu_scorer.compute_score(option='shortest')
 
         # return (bleu, bleu_info)
-        return bleu, bleu_list
+        return score, scores
 
     def method(self):
         return "Bleu"

@@ -74,7 +74,7 @@ class Rouge():
             score = 0.0
         return score
 
-    def compute_score(self, hypo_for_image, ref_for_image):
+    def compute_score(self, gts, res):
         """
         Computes Rouge-L score given a set of reference and candidate sentences for the dataset
         Invoked by evaluate_captions.py 
@@ -82,16 +82,13 @@ class Rouge():
         :param ref_for_image: dict : reference MS-COCO sentences with "image name" key and "tokenized sentences" as values
         :returns: average_score: float (mean ROUGE-L score computed by averaging scores for all the images)
         """
-        images = hypo_for_image.keys()
-        images.sort()
-        tmp_images = ref_for_image.keys()
-        tmp_images.sort()
-        assert(images == tmp_images)
+        assert(gts.keys() == res.keys())
+        imgIds = gts.keys()
 
         score = []
-        for i in images:
-            hypo = hypo_for_image[i]
-            ref = ref_for_image[i]
+        for id in imgIds:
+            hypo = res[id]
+            ref  = gts[id]
 
             score.append(self.calc_score(hypo, ref))
 

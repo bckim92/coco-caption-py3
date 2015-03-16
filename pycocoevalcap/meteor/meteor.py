@@ -25,28 +25,25 @@ class Meteor:
         # Used to guarantee thread safety
         self.lock = threading.Lock()
 
-    def compute_score(self, hypo_for_image, ref_for_image):
-        images = hypo_for_image.keys()
-        images.sort()
-        tmp_images = ref_for_image.keys()
-        tmp_images.sort()
-        assert(images == tmp_images)
+    def compute_score(self, gts, res):
+        assert(gts.keys() == res.keys())
+        imgIds = gts.keys()
         scores = []
 
         eval_line = 'EVAL'
         self.lock.acquire()
-        for i in images:
-            assert(len(hypo_for_image[i]) == 1)
-            stat = self._stat(hypo_for_image[i][0], ref_for_image[i])
+        for i in imgIds:
+            assert(len(res[i]) == 1)
+            stat = self._stat(res[i][0], gts[i])
             eval_line += ' ||| {}'.format(stat)
 
         self.meteor_p.stdin.write('{}\n'.format(eval_line))
-        for i in range(0,len(images)):
+        for i in range(0,len(imgIds)):
             scores.append(float(self.meteor_p.stdout.readline().strip()))
         score = float(self.meteor_p.stdout.readline().strip())
         self.lock.release()
 
-        return (score, scores)
+        return score, scores
 
     def method(self):
         return "METEOR"

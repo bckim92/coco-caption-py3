@@ -21,7 +21,7 @@ class Cider:
         # set the standard deviation parameter for gaussian penalty
         self._sigma = sigma
 
-    def compute_score(self, hypo_for_image, ref_for_image):
+    def compute_score(self, gts, res):
         """
         Main function to compute CIDEr score
         :param  hypo_for_image (dict) : dictionary with key <image> and value <tokenized hypothesis / candidate sentence>
@@ -29,16 +29,14 @@ class Cider:
         :return: cider (float) : computed CIDEr score for the corpus 
         """
 
-        images = hypo_for_image.keys()
-        images.sort()
-        tmp_images = ref_for_image.keys()
-        tmp_images.sort()
-        assert(images == tmp_images)
+        assert(gts.keys() == res.keys())
+        imgIds = gts.keys()
+
         cider_scorer = CiderScorer(n=self._n, sigma=self._sigma)
 
-        for i in images:
-            hypo = hypo_for_image[i]
-            ref = ref_for_image[i]
+        for id in imgIds:
+            hypo = res[id]
+            ref = gts[id]
 
             # Sanity check.
             assert(type(hypo) is list)
@@ -48,9 +46,9 @@ class Cider:
 
             cider_scorer += (hypo[0], ref)
 
-        cider, cider_list = cider_scorer.compute_score()
+        (score, scores) = cider_scorer.compute_score()
 
-        return cider, cider_list
+        return score, scores
 
     def method(self):
         return "CIDEr"
