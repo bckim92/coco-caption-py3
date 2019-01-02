@@ -1,11 +1,18 @@
-Microsoft COCO Caption Evaluation
+Microsoft COCO Caption Evaluation (Python 3)
 ===================
 
 Evaluation codes for MS COCO caption generation.
 
 ## Requirements ##
 - java 1.8.0
-- python 2.7
+- python 3.6
+- requirements.txt
+
+## Modifications ##
+- Modify code to support python3 syntax
+- Add sample code for run coco-eval (see `test_eval.py`)
+- Modify `coco.py` to support directly feed annotation results w/o loading from file
+- Add `requirements.txt`
 
 ## Files ##
 ./
@@ -32,7 +39,7 @@ Evaluation codes for MS COCO caption generation.
 
 - You will first need to download the [Stanford CoreNLP 3.6.0](http://stanfordnlp.github.io/CoreNLP/index.html) code and models for use by SPICE. To do this, run:
     ./get_stanford_models.sh
-- Note: SPICE will try to create a cache of parsed sentences in ./pycocoevalcap/spice/cache/. This dramatically speeds up repeated evaluations. The cache directory can be moved by setting 'CACHE_DIR' in ./pycocoevalcap/spice. In the same file, caching can be turned off by removing the '-cache' argument to 'spice_cmd'. 
+- Note: SPICE will try to create a cache of parsed sentences in ./pycocoevalcap/spice/cache/. This dramatically speeds up repeated evaluations. The cache directory can be moved by setting 'CACHE_DIR' in ./pycocoevalcap/spice. In the same file, caching can be turned off by removing the '-cache' argument to 'spice_cmd'.
 
 ## References ##
 
